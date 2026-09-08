@@ -8,7 +8,7 @@ import consts
 import game_field
 import soldier
 
-ANIMATION_TIME_EXPLOSION = 0.5
+
 
 def main():
     game_over = False
@@ -30,7 +30,7 @@ def main():
 
                 if soldier.player_touch_mine(new_coorinates):
                     screen.draw_mine_explosion()
-                    time.sleep(ANIMATION_TIME_EXPLOSION)
+                    time.sleep(consts.ANIMATION_TIME_EXPLOSION)
                     screen.draw_mine_hole()
                     game_over = True
 
