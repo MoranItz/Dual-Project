@@ -8,6 +8,6 @@ def draw_field():
     # TODO: draw current field
     pass
 
-def show_mines():
-    #TODO: draw the mines for 1 second for the player
+def draw_night_mode():
+    #TODO: draw the mines for 1 second for the player then reset back to normal
     pass
