@@ -8,6 +8,7 @@ import consts
 import game_field
 import soldier
 
+ANIMATION_TIME_EXPLOSION = 0.5
 
 def main():
     game_over = False
@@ -15,21 +16,22 @@ def main():
     game_field.init_game_field()
     screen.init_screen()
 
-    game_field.draw_field()
+    screen.draw_field()
+    screen.draw_player()
     while not game_over:
 
         events = pygame.event.get() # get player events
         for event in events:
             if event.type == pygame.K_KP_ENTER: # if the player presses ENTER
-                game_field.draw_night_mode()
+                screen.draw_night_mode()
                 time.sleep(consts.MINE_PEEK_COOLDOWN) # sleep for 1 second so the player will have a cooldown when seeing the mines
             else:
                 new_coorinates = soldier.get_new_coordinates(event.type) # returns the new coordinates for the move
 
                 if soldier.player_touch_mine(new_coorinates):
-                    game_field.draw_mine_explosion()
-                    time.sleep(0.5)
-                    game_field.draw_mine_hole()
+                    screen.draw_mine_explosion()
+                    time.sleep(ANIMATION_TIME_EXPLOSION)
+                    screen.draw_mine_hole()
                     game_over = True
 
                 if soldier.player_touch_flag(new_coorinates):
@@ -37,7 +39,7 @@ def main():
 
                 soldier.move_player(new_coorinates)
 
-        game_field.draw_field()
+        screen.draw_player()
 
     if soldier.player_touch_flag():
         print("game won!")
