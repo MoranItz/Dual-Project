@@ -3,6 +3,7 @@ import pygame
 import consts
 import game_field
 
+
 soldier = {}
 
 """ 
@@ -12,7 +13,7 @@ soldier = {}
 """
 def init_soldier():
     global soldier # creates global soldier object
-    soldier = {"x" : 0, "y" : 0, "status" : ""}
+    soldier = {"x" : 0, "y" : 0, "status" : consts.REGULAR_SOLDIER_IMG}
 
     return soldier
 
@@ -47,9 +48,11 @@ def get_new_coordinates(event_type):
     returns False, else the function returns True.
 """
 def is_move_valid(coordinates):
-    if coordinates[consts.X_COORDINATES_INDEX] < 0 or coordinates[consts.X_COORDINATES_INDEX] >= consts.BOARD_COLS:
+    if (coordinates[consts.X_COORDINATES_INDEX] < 0 or
+            coordinates[consts.X_COORDINATES_INDEX] >= consts.BOARD_COLS - consts.SOLDIER_FEET_ROWS):
         return False
-    if coordinates[consts.Y_COORDINATES_INDEX] < 0 or coordinates[consts.Y_COORDINATES_INDEX] >= consts.BOARD_ROWS:
+    if (coordinates[consts.Y_COORDINATES_INDEX] < 0 or
+            coordinates[consts.Y_COORDINATES_INDEX] >= consts.BOARD_ROWS - consts.SOLDIER_BODY_ROWS):
         return False
 
     return True
@@ -70,7 +73,14 @@ def player_touch_mine(coordinates):
     for y in range(len(game_field.game_field)): # reversed y and x because of how 2d lists work
         for x in range(y):
             # if the coordinates of the soldier are the same as any mine on the map
-            if game_field.game_field[y][x] == consts.MINE_IMG and coordinates[consts.X_COORDINATES_INDEX] == x and coordinates[consts.Y_COORDINATES_INDEX] == y:
+            if (game_field.game_field[y][x] == consts.MINE_IMG and
+                    coordinates[consts.X_COORDINATES_INDEX] == x and
+                    coordinates[consts.Y_COORDINATES_INDEX] == y):
+                return True
+            # if the coordinates of the soldier are the same as any mine on the map (for the second foot)
+            elif (game_field.game_field[y][x] == consts.MINE_IMG and
+                  coordinates[consts.X_COORDINATES_INDEX] + consts.SOLDIER_FEET_ROWS == x and
+                  coordinates[consts.Y_COORDINATES_INDEX] == y):
                 return True
     return False
 
@@ -80,6 +90,12 @@ def player_touch_mine(coordinates):
 """
 def player_touch_flag(coordinates):
     # if the coordinates of the soldier are the same as the flag
-    if coordinates[consts.X_COORDINATES_INDEX] == consts.BOARD_COLS - 1 and coordinates[consts.Y_COORDINATES_INDEX] == consts.BOARD_ROWS - 1:
+    if (coordinates[consts.X_COORDINATES_INDEX] == consts.BOARD_COLS - 1 and
+            coordinates[consts.Y_COORDINATES_INDEX] == consts.BOARD_ROWS - 1):
         return True
+
+    elif (coordinates[consts.X_COORDINATES_INDEX] + consts.SOLDIER_FEET_ROWS == consts.BOARD_COLS - 1 and
+            coordinates[consts.Y_COORDINATES_INDEX] == consts.BOARD_ROWS - 1):
+        return True
+
     return False
