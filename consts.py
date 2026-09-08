@@ -12,7 +12,7 @@ SOLDIER_BODY_ROWS = 3 # the upper part
 SOLDIER_FEET_ROWS = 1 # the lower part
 
 # COLORS
-REG_MODE_COLOR = (34, 139, 34)
+REGULAR_MODE_COLOR = (34, 139, 34)
 NIGHT_MODE_COLOR = (0, 0, 0)
 
 # FLAG SETTINGS
@@ -26,3 +26,18 @@ MINE_COLS = 3
 
 # SLEEP TIMES
 MINE_PEEK_COOLDOWN = 1
+
+# SOLDIER STATUS
+REGULAR_STATUS = "soldier.png"
+NIGHT_STATUS = "soldier_night.png"
+INJURED_STATUS = "injury.png"
+
+# GAME OBJECTS IMAGES
+GRASS_IMG = "grass.png"
+FLAG_IMG = "flag.png"
+SNAKE_IMG = "snake.png"
+GUARD_IMG = "guard.png"
+MINE_ING = "mine.png"
+EXPLOSION_IMG = "explosion.png"
+TELEPORT_IMG = "teleport.png"
+
