@@ -3,7 +3,9 @@ import pygame
 import random as rnd
 import time
 
-soldier = pygame.Surface
+soldier_image = ""
+soldier = pygame.display.set_mode(
+        (consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH))
 screen = pygame.display.set_mode(
         (consts.WINDOW_WIDTH, consts.WINDOW_HEIGHT))
 
@@ -12,6 +14,8 @@ def init_screen():
     #pygame.init()
     global screen # initiate screen as global
     screen.fill(consts.GREEN)
+    global soldier_image
+    soldier_image = load_image(consts.SOLDIER_REGULAR_IMG, consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
     pygame.display.flip()
 
 # Function that closes the screen
@@ -50,6 +54,9 @@ def load_image(image_name, width, height):
 def draw_image(image_name, pos_x, pos_y, width=consts.IMAGE_LENGTH, height=consts.IMAGE_LENGTH):
     image = load_image(image_name, width, height)
     screen.blit(image,(pos_x, pos_y))
+
+def draw_soldier(pos_x, pos_y, image=consts.SOLDIER_REGULAR_IMG):
+    soldier.blit(soldier_image, (pos_x, pos_y))
 
 # Function that draws night mode
 # Draws grid, mines and night mode soldier
