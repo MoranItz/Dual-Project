@@ -1,20 +1,26 @@
 
 def init_soldier():
-    #TODO: initiate global soldier object
+    global soldier
+    soldier = {"x" : 0, "y" : 0, "status" : ""}
+
+    return soldier
+
+def get_new_coordinates(event_type):
+    #TODO: return new soldier move coordinates
     pass
 
-def move_player(event_type):
+def move_player(coordinates):
     #TODO: move the player in the game field
     pass
 
-def is_move_valid():
+def is_move_valid(coordinates):
     #TODO: check if the move exits the boundries of the game field
     pass
 
-def player_touch_mine():
+def player_touch_mine(coordinates):
     #TODO: return true if player interacts with mine in game field
     pass
 
-def player_touch_flag():
+def player_touch_flag(coordinates):
     #TODO: return true if player interacts with flag in game field
     pass

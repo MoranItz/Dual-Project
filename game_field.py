@@ -1,4 +1,6 @@
+import pygame
 
+import soldier
 
 def init_game_field():
     # TODO: initiate global game field object with randomly places mines and the player and flag inside
@@ -10,4 +12,12 @@ def draw_field():
 
 def draw_night_mode():
     #TODO: draw the mines for 1 second for the player then reset back to normal
+    pass
+
+def draw_mine_explosion():
+    #TODO: draw mine explosion on screen
+    pass
+
+def draw_mine_hole():
+    #TODO: draw mine hole on screen
     pass

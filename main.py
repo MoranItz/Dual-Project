@@ -21,18 +21,23 @@ def main():
         events = pygame.event.get() # get player events
         for event in events:
             if event.type == pygame.K_KP_ENTER: # if the player presses ENTER
-                game_field.draw_night_mode(event.type)
+                game_field.draw_night_mode()
                 time.sleep(consts.MINE_PEEK_COOLDOWN) # sleep for 1 second so the player will have a cooldown when seeing the mines
             else:
-                soldier.move_player(event.type) # Moves player
+                new_coorinates = soldier.get_new_coordinates(event.type) # returns the new coordinates for the move
+
+                if soldier.player_touch_mine(new_coorinates):
+                    game_field.draw_mine_explosion()
+                    time.sleep(0.5)
+                    game_field.draw_mine_hole()
+                    game_over = True
+
+                if soldier.player_touch_flag(new_coorinates):
+                    game_over = True
+
+                soldier.move_player(new_coorinates)
 
         game_field.draw_field()
-
-        if soldier.player_touch_mine() or soldier.player_touch_flag():
-            game_over = True
-
-
-
 
     if soldier.player_touch_flag():
         print("game won!")
