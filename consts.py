@@ -28,9 +28,9 @@ MINE_COLS = 3
 MINE_PEEK_COOLDOWN = 1
 
 # SOLDIER STATUS
-REGULAR_STATUS = "soldier.png"
-NIGHT_STATUS = "soldier_night.png"
-INJURED_STATUS = "injury.png"
+REGULAR_SOLDIER_IMG = "soldier.png"
+NIGHT_SOLDIER_IMG = "soldier_night.png"
+INJURED_SOLDIER_IMG = "injury.png"
 
 # GAME OBJECTS IMAGES
 GRASS_IMG = "grass.png"
