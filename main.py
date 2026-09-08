@@ -1,10 +1,12 @@
+# Outside source imports
 import pygame
+import time
 
+# Self defined imports
 import screen
 import consts
 import game_field
 import soldier
-import time
 
 
 def main():
@@ -20,17 +22,19 @@ def main():
         for event in events:
             if event.type == pygame.K_KP_ENTER: # if the player presses ENTER
                 game_field.show_mines(event.type)
-                time.sleep(1) # sleep for 1 second so the player will have a cooldown when seeing the mines
+                time.sleep(consts.MINE_PEEK_COOLDOWN) # sleep for 1 second so the player will have a cooldown when seeing the mines
             else:
                 soldier.move_player(event.type) # Moves player
+
+        game_field.draw_field()
 
         if soldier.player_touch_mine() or soldier.player_touch_flag():
             game_over = True
 
-        game_field.draw_field()
 
 
-    if is_touch_flag():
+
+    if soldier.player_touch_flag():
         print("game won!")
     else:
         print("game lost!")
