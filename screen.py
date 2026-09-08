@@ -9,10 +9,10 @@ screen = pygame.display.set_mode(
 
 # Function that creates global screen with green background
 def init_screen():
-    pygame.init()
+    #pygame.init()
     global screen # initiate screen as global
     screen.fill(consts.GREEN)
-    pygame.display.init()
+    pygame.display.flip()
 
 # Function that closes the screen
 def close_screen():
@@ -48,7 +48,7 @@ def load_image(image_name, width, height):
 # Function that gets image name, position on screen and its size
 # and draws image on the screen
 def draw_image(image_name, pos_x, pos_y, width=consts.IMAGE_LENGTH, height=consts.IMAGE_LENGTH):
-    image = load_image(image_name, width, consts)
+    image = load_image(image_name, width, height)
     screen.blit(image,(pos_x, pos_y))
 
 # Function that draws night mode

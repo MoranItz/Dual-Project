@@ -60,6 +60,3 @@ def is_field_valid(test_field):
             if col == consts.FLAG_IMG:
                 return False
     return True
-
-init_game_field()
-print(game_field)

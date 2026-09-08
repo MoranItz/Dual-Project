@@ -3,9 +3,6 @@ import pygame
 import consts
 import game_field
 
-
-soldier = {}
-
 """ 
     This function initiates the global soldier (player) object
     it returns the object initiated with the [x, y] coordinates as [0, 0]
@@ -13,7 +10,7 @@ soldier = {}
 """
 def init_soldier():
     global soldier # creates global soldier object
-    soldier = {"x" : 0, "y" : 0, "status" : consts.REGULAR_SOLDIER_IMG}
+    soldier = {"x" : 0, "y" : 0, "status" : consts.SOLDIER_REGULAR_IMG}
 
     return soldier
 
@@ -22,22 +19,25 @@ def init_soldier():
     soldier coordinates based on the click. (up, down, right, left)
     if a click is not one of those, the function just returns the current coordinates
 """
-def get_new_coordinates(event_type):
+def get_new_coordinates(event):
     new_coordinates = ()
 
-    if event_type == pygame.K_UP: # when player presses up key
+    if event.key == pygame.K_UP: # when player presses up key
         new_coordinates = soldier["x"], soldier["y"] + consts.STEP
 
-    elif event_type == pygame.K_DOWN: # when player presses down key
+    elif event.key == pygame.K_DOWN: # when player presses down key
         new_coordinates = soldier["x"], soldier["y"] - consts.STEP
 
-    elif event_type == pygame.K_RIGHT: # when player presses right key
+    elif event.key == pygame.K_RIGHT: # when player presses right key
+        print(soldier["x"])
         new_coordinates = soldier["x"] + consts.STEP, soldier["y"]
 
-    elif event_type == pygame.K_LEFT: # when player presses left key
+    elif event.key == pygame.K_LEFT: # when player presses left key
         new_coordinates = soldier["x"] - consts.STEP, soldier["y"]
 
     if is_move_valid(new_coordinates):
+        if new_coordinates == ():
+            return 0, 0
         return new_coordinates
 
     return soldier["x"], soldier["y"]
@@ -48,11 +48,13 @@ def get_new_coordinates(event_type):
     returns False, else the function returns True.
 """
 def is_move_valid(coordinates):
+    if coordinates == ():
+        return True
     if (coordinates[consts.X_COORDINATES_INDEX] < 0 or
-            coordinates[consts.X_COORDINATES_INDEX] >= consts.BOARD_COLS - consts.SOLDIER_FEET_ROWS):
+            coordinates[consts.X_COORDINATES_INDEX] > consts.BOARD_COLS - consts.SOLDIER_FEET_ROWS):
         return False
     if (coordinates[consts.Y_COORDINATES_INDEX] < 0 or
-            coordinates[consts.Y_COORDINATES_INDEX] >= consts.BOARD_ROWS - consts.SOLDIER_BODY_ROWS):
+            coordinates[consts.Y_COORDINATES_INDEX] > consts.BOARD_ROWS - consts.SOLDIER_BODY_ROWS):
         return False
 
     return True
