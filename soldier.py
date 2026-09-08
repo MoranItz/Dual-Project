@@ -25,10 +25,10 @@ def get_new_coordinates(event):
     new_coordinates = ()
 
     if event.key == pygame.K_UP: # when player presses up key
-        new_coordinates = soldier["x"], soldier["y"] + consts.STEP
+        new_coordinates = soldier["x"], soldier["y"] - consts.STEP
 
     elif event.key == pygame.K_DOWN: # when player presses down key
-        new_coordinates = soldier["x"], soldier["y"] - consts.STEP
+        new_coordinates = soldier["x"], soldier["y"] + consts.STEP
 
     elif event.key == pygame.K_RIGHT: # when player presses right key
         print(soldier["x"])

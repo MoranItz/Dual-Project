@@ -12,13 +12,13 @@ import soldier
 def main():
     game_over = False
 
-    game_field.init_game_field()
     soldier.init_soldier()
+    game_field.init_game_field()
     screen.init_screen()
-
     screen.draw_field()
-    #screen.draw_player()
+
     while not game_over:
+        pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -39,10 +39,10 @@ def main():
                     if soldier.player_touch_flag(new_coordinates):
                         game_over = True
 
-                    soldier.move_player(new_coordinates)
-                    print(soldier.soldier["x"], soldier.soldier["y"])
+                soldier.move_player(new_coordinates)
+                screen.draw_soldier(soldier.soldier["x"]*consts.CELL_SIZE, soldier.soldier["y"]*consts.CELL_SIZE)
 
-        #screen.draw_player()
+
 
     if soldier.player_touch_flag():
         print("game won!")
