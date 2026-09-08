@@ -12,7 +12,7 @@ soldier = {}
 """
 def init_soldier():
     global soldier # creates global soldier object
-    soldier = {"x" : 0, "y" : 0, "status" : ""}
+    soldier = {"x" : 0, "y" : 0, "status" : consts.REGULAR_SOLDIER_IMG}
 
     return soldier
 
