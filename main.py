@@ -21,7 +21,7 @@ def main():
         events = pygame.event.get() # get player events
         for event in events:
             if event.type == pygame.K_KP_ENTER: # if the player presses ENTER
-                game_field.show_mines(event.type)
+                game_field.draw_night_mode(event.type)
                 time.sleep(consts.MINE_PEEK_COOLDOWN) # sleep for 1 second so the player will have a cooldown when seeing the mines
             else:
                 soldier.move_player(event.type) # Moves player
