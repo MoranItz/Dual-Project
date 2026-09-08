@@ -9,7 +9,6 @@ import game_field
 import soldier
 
 
-
 def main():
     game_over = False
 
@@ -26,18 +25,18 @@ def main():
                 screen.draw_night_mode()
                 time.sleep(consts.MINE_PEEK_COOLDOWN) # sleep for 1 second so the player will have a cooldown when seeing the mines
             else:
-                new_coorinates = soldier.get_new_coordinates(event.type) # returns the new coordinates for the move
+                new_coordinates = soldier.get_new_coordinates(event.type) # returns the new coordinates for the move
 
-                if soldier.player_touch_mine(new_coorinates):
+                if soldier.player_touch_mine(new_coordinates):
                     screen.draw_mine_explosion()
                     time.sleep(consts.ANIMATION_TIME_EXPLOSION)
                     screen.draw_mine_hole()
                     game_over = True
 
-                if soldier.player_touch_flag(new_coorinates):
+                if soldier.player_touch_flag(new_coordinates):
                     game_over = True
 
-                soldier.move_player(new_coorinates)
+                soldier.move_player(new_coordinates)
 
         screen.draw_player()
 
