@@ -3,6 +3,8 @@ import pygame
 import consts
 import game_field
 
+soldier = {}
+
 """ 
     This function initiates the global soldier (player) object
     it returns the object initiated with the [x, y] coordinates as [0, 0]

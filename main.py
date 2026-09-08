@@ -21,9 +21,13 @@ def main():
     while not game_over:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.type == pygame.K_KP_ENTER: # if the player presses ENTER
+                if event.key == pygame.K_ESCAPE:
+                    game_over = True
+
+                if event.key == pygame.K_KP_ENTER: # if the player presses ENTER
                     #screen.draw_night_mode()
                     time.sleep(consts.MINE_PEEK_COOLDOWN) # sleep for 1 second so the player will have a cooldown when seeing the mines
+
                 else:
                     new_coordinates = soldier.get_new_coordinates(event) # returns the new coordinates for the move
 
