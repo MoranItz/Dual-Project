@@ -1,24 +1,46 @@
 import pandas
 
+import game_field
+import soldier
+from game_field import generate_empty_field
+
+from soldier import soldier
+
 database = pandas.DataFrame()
 
-def database_init():
-    # TODO: initialize pandas module
-    pass
-
 def load_database():
-    database = pandas.DataFrame()
-    # TODO: load database file
-    pass
+    database = pandas.read_csv("database.csv")
 
-def add_field_to_database(key_name):
-    # TODO: add field with given name
-    pass
+def add_field_to_database(player_state):
+    database.update(player_state)
 
-def update_field(key, value):
-    # TODO: add value to field with given key
-    pass
+def get_player_state(player):
+    return database.loc[player-1]
 
-def get_field(key):
-    # TODO: return field with given key as list
-    pass
+def save_current_state(player, soldier, grid):
+    database.loc[player-1]["soldier"] = soldier
+    database.loc[player-1]["grid"] = grid
+
+def create_default_state():
+    default_data = []
+    for i in range(9):
+        curr_soldier = soldier.init_soldier()
+        default_data.append({
+                "soldier": curr_soldier,
+                "grid": game_field.generate_random_field()
+        })
+    db = pandas.DataFrame(default_data)
+    return db
+
+def create_database_file():
+    db = create_default_state()
+    db.to_csv("database.csv")
+
+
+"""
+             soldier grid
+    player1: 
+    player2:
+    player3:
+    ...
+"""
