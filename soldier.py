@@ -1,8 +1,4 @@
-import consts
-import game_field
 import pygame
-
-soldier = {}
 
 import consts
 import game_field
@@ -10,9 +6,10 @@ import game_field
 soldier = {}
 
 """ 
-    This function initiates the global soldier (player) object
-    it returns the object initiated with the [x, y] coordinates as [0, 0]
-    and his status (image) as the default soldier image
+This function initiates the soldier dict
+it has its x and y values which are the top left of the image coordinates.
+The "img" key which holds the current state of the soldier.
+And the "hitbox" key which holds a 2d list of all of the coordinates of the soldiers body/feet
 """
 def init_soldier():
     global soldier
@@ -22,12 +19,19 @@ def init_soldier():
         "y" : 0,
         "img" : consts.SOLDIER_REGULAR_IMG,
         "hitbox" : get_hitboxes(),
-        "night_mode" : False
     }
 
+"""
+Returns the x and y coordinates of the soldier as a tuple
+"""
 def get_coordinates():
     return soldier["x"], soldier["y"]
 
+"""
+This function moves the player in the direction given to it by the get_move_direction
+function. it moves the player in the direction given and changes its hitboxes to move and also its
+top left coordinate "x" and "y".
+"""
 def move_player(direction):
     if is_move_valid(soldier["x"]+direction[1], soldier["y"]+direction[0]):
         soldier["x"] += direction[1]
@@ -36,6 +40,10 @@ def move_player(direction):
             soldier["hitbox"][index][0] += direction[0]
             soldier["hitbox"][index][1] += direction[1]
 
+"""
+This function gets an event type and it returns the direction
+the soldier needs to move based on the players pressed key
+"""
 def get_move_direction(event):
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_UP:
@@ -48,7 +56,10 @@ def get_move_direction(event):
             return 0,-1
     return 0,0
 
-
+"""
+This function is used to get the starting position hitboxes for the soldier at
+the [0, 0] position.
+"""
 def get_hitboxes():
     hitboxes = []
     for row in range(4):
@@ -57,6 +68,10 @@ def get_hitboxes():
 
     return hitboxes
 
+"""
+This function checkes if a move exists the boundries of the game_field.
+if it does it returns False, if not it returns True
+"""
 def is_move_valid(x, y):
     if consts.BOARD_COLS - 4 < x or x < 0:
         return False
@@ -65,6 +80,10 @@ def is_move_valid(x, y):
 
     return True
 
+"""
+Function returns True weather the soldier feet hitboxes (last two inboxes in the array)
+have collided with a mine on the map. Else it returns False
+"""
 def player_touch_mine():
     index_legs = [soldier["hitbox"][-1], soldier["hitbox"][-2]]
     for leg in index_legs:
@@ -74,6 +93,10 @@ def player_touch_mine():
 
     return False
 
+"""
+This function returns True weather the soldier body hitboxes (every hitbox except
+the two last ones) has collided with the flag at the bottom right of the map.
+"""
 def player_touch_flag():
     for i in range(len(soldier["hitbox"]) - 2):
         index = soldier["hitbox"][i][0], soldier["hitbox"][i][1]
