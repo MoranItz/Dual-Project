@@ -1,5 +1,6 @@
 import consts
 import pygame
+import pygame.font
 import random as rnd
 import time
 
@@ -12,12 +13,19 @@ grass_coordinates = []
 
 # Function that creates global screen with green background
 def init_screen():
+    pygame.font.init()
     global screen
     global grass_coordinates
 
 # Function that closes the screen
 def close_screen():
     pygame.display.quit()
+
+def display_welcome_message():
+    text = "Welcome to The Flag game.\n Have Fun!"
+    pos_x = ( soldier.get_coordinates()[0] + consts.SOLDIER_COLS + 1 ) * consts.CELL_SIZE
+    pos_y = soldier.get_coordinates()[1]
+    display_message(text, pos_x, pos_y)
 
 def draw_field():
     screen.fill(consts.GREEN)
@@ -95,9 +103,16 @@ def draw_explosion():
     soldier.soldier["img"] = consts.SOLDIER_INJURED_IMG
     draw_field()
     explosion_img = load_and_transform_img(consts.EXPLOSION_IMG)
-    x = soldier.get_coordinates()[0] * consts.CELL_SIZE
-    y = soldier.get_coordinates()[1] * consts.CELL_SIZE
+    x = ( soldier.get_coordinates()[0] + consts.SOLDIER_COLS ) * consts.CELL_SIZE
+    y = ( soldier.get_coordinates()[1] + consts.SOLDIER_ROWS - 2 ) * consts.CELL_SIZE
     screen.blit(explosion_img, (x, y))
     time.sleep(consts.ANIMATION_TIME_EXPLOSION)
     pygame.display.flip()
+
+def display_message(message_text, pos_x=consts.WINDOW_WIDTH // 2, pos_y=consts.WINDOW_HEIGHT // 2):
+    font = pygame.font.SysFont(consts.FONT_NAME, 35)
+    message = font.render(message_text, True, color=consts.BLACK)
+    screen.blit(message,(pos_x, pos_y))
+    pygame.display.flip()
+
 

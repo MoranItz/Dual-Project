@@ -50,6 +50,8 @@ EXPLOSION_IMG = "explosion.png"
 TELEPORT_IMG = "teleport.png"
 EMPTY_CELL = ""
 
+FONT_NAME = "Calibri"
+
 # ANIMATION TIMES
 ANIMATION_TIME_EXPLOSION = 0.5
 
