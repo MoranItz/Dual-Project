@@ -1,3 +1,6 @@
+# Moran Itzkovich - 217278274
+# Polina Prokopenko 227390135
+
 # Outside source imports
 import pygame
 import time
@@ -40,7 +43,7 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         return
-                    elif event.key == pygame.K_0:
+                    elif event.key == pygame.K_KP_ENTER:
                         night_mode_stop_watch = time.time()
                     else:
                         soldier.move_player(soldier.get_move_direction(event))
@@ -60,4 +63,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    time.sleep(5)
