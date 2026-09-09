@@ -11,7 +11,6 @@ import soldier
 
 def main():
     game_over = False
-    events = ""
     night_mode_stop_watch = 0
 
     soldier.init_soldier()
@@ -42,14 +41,14 @@ def main():
                     else:
                         soldier.move_player(soldier.get_move_direction(event))
 
-                if soldier.player_touch_flag():
-                    print("win")
-                    game_over = True
+            if soldier.player_touch_flag():
+                print("win")
+                game_over = True
 
-                elif soldier.player_touch_mine():
-                    screen.draw_explosion()
-                    print("lose")
-                    game_over = True
+            elif soldier.player_touch_mine():
+                screen.draw_explosion()
+                print("lose")
+                game_over = True
 
 
 
