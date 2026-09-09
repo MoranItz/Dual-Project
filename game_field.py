@@ -93,8 +93,3 @@ def copy_grid(grid):
     for row in grid:
         grid_copy.append(row.copy())
     return grid_copy
-
-
-init_game_field()
-for row in game_field:
-    print(row)
