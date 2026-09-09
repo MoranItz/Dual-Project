@@ -1,4 +1,8 @@
+import consts
+import game_field
 import pygame
+
+soldier = {}
 
 import consts
 import game_field
@@ -11,95 +15,70 @@ soldier = {}
     and his status (image) as the default soldier image
 """
 def init_soldier():
-    global soldier # creates global soldier object
-    soldier = {"x" : 0, "y" : 0, "status" : consts.SOLDIER_REGULAR_IMG}
+    global soldier
 
-    return soldier
+    soldier = {
+        "x" : 0,
+        "y" : 0,
+        "img" : consts.SOLDIER_REGULAR_IMG,
+        "hitbox" : get_hitboxes(),
+        "night_mode" : False
+    }
 
-"""
-    This function gets the click the user pressed and returns the new
-    soldier coordinates based on the click. (up, down, right, left)
-    if a click is not one of those, the function just returns the current coordinates
-"""
-def get_new_coordinates(event):
-    new_coordinates = ()
-
-    if event.key == pygame.K_UP: # when player presses up key
-        new_coordinates = soldier["x"], soldier["y"] - consts.STEP
-
-    elif event.key == pygame.K_DOWN: # when player presses down key
-        new_coordinates = soldier["x"], soldier["y"] + consts.STEP
-
-    elif event.key == pygame.K_RIGHT: # when player presses right key
-        print(soldier["x"])
-        new_coordinates = soldier["x"] + consts.STEP, soldier["y"]
-
-    elif event.key == pygame.K_LEFT: # when player presses left key
-        new_coordinates = soldier["x"] - consts.STEP, soldier["y"]
-
-    if is_move_valid(new_coordinates):
-        if new_coordinates == ():
-            return 0, 0
-        return new_coordinates
-
+def get_coordinates():
     return soldier["x"], soldier["y"]
 
-"""
-    This function gets the new supposed coordinates for the new soldier move.
-    if the new coordinates exceed the boundries of the game_field the function
-    returns False, else the function returns True.
-"""
-def is_move_valid(coordinates):
-    if coordinates == ():
-        return True
-    if (coordinates[consts.X_COORDINATES_INDEX] < 0 or
-            coordinates[consts.X_COORDINATES_INDEX] > consts.BOARD_COLS - consts.SOLDIER_FEET_ROWS):
+def move_player(direction):
+    if is_move_valid(soldier["x"]+direction[1], soldier["y"]+direction[0]):
+        soldier["x"] += direction[1]
+        soldier["y"] += direction[0]
+        for index in range(len(soldier["hitbox"])):
+            soldier["hitbox"][index][0] += direction[0]
+            soldier["hitbox"][index][1] += direction[1]
+
+def get_move_direction(event):
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_UP:
+            return -1,0
+        elif event.key == pygame.K_DOWN:
+            return 1,0
+        elif event.key == pygame.K_RIGHT:
+            return 0,1
+        elif event.key == pygame.K_LEFT:
+            return 0,-1
+    return 0,0
+
+
+def get_hitboxes():
+    hitboxes = []
+    for row in range(4):
+        for col in range(1, 3):
+            hitboxes.append([row, col])
+
+    return hitboxes
+
+def is_move_valid(x, y):
+    if consts.BOARD_COLS - 4 < x or x < 0:
         return False
-    if (coordinates[consts.Y_COORDINATES_INDEX] < 0 or
-            coordinates[consts.Y_COORDINATES_INDEX] > consts.BOARD_ROWS - consts.SOLDIER_BODY_ROWS):
+    elif consts.BOARD_ROWS - 4 < y or y < 0:
         return False
 
     return True
 
-"""
-    This function gets the new coordinates after the checks if the move is valid
-    and it updates the soldiers coordinates to the new coordinates.
-"""
-def move_player(coordinates):
-    soldier["x"] = coordinates[consts.X_COORDINATES_INDEX]
-    soldier["y"] = coordinates[consts.Y_COORDINATES_INDEX]
-
-"""
-    This function recieves the coordinates of the player and wants to check if there
-    is any collision with the player and any mine on the map.
-"""
-def player_touch_mine(coordinates):
-    for y in range(len(game_field.game_field)): # reversed y and x because of how 2d lists work
-        for x in range(y):
-            # if the coordinates of the soldier are the same as any mine on the map
-            if (game_field.game_field[y][x] == consts.MINE_IMG and
-                    coordinates[consts.X_COORDINATES_INDEX] == x and
-                    coordinates[consts.Y_COORDINATES_INDEX] == y):
-                return True
-            # if the coordinates of the soldier are the same as any mine on the map (for the second foot)
-            elif (game_field.game_field[y][x] == consts.MINE_IMG and
-                  coordinates[consts.X_COORDINATES_INDEX] + consts.SOLDIER_FEET_ROWS == x and
-                  coordinates[consts.Y_COORDINATES_INDEX] == y):
-                return True
-    return False
-
-"""
-    This function recieves the coordinates of the player and wants to check if there
-    is any collision with the player and the flag. It returns True if it does and False if not
-"""
-def player_touch_flag(coordinates):
-    # if the coordinates of the soldier are the same as the flag
-    if (coordinates[consts.X_COORDINATES_INDEX] == consts.BOARD_COLS - 1 and
-            coordinates[consts.Y_COORDINATES_INDEX] == consts.BOARD_ROWS - 1):
-        return True
-
-    elif (coordinates[consts.X_COORDINATES_INDEX] + consts.SOLDIER_FEET_ROWS == consts.BOARD_COLS - 1 and
-            coordinates[consts.Y_COORDINATES_INDEX] == consts.BOARD_ROWS - 1):
-        return True
+def player_touch_mine():
+    index_legs = [soldier["hitbox"][-1], soldier["hitbox"][-2]]
+    for leg in index_legs:
+        if game_field.game_field[leg[0]][leg[1]] == consts.MINE_IMG:
+            soldier["img"] = consts.SOLDIER_INJURED_IMG
+            return True
 
     return False
+
+def player_touch_flag():
+    for i in range(len(soldier["hitbox"]) - 2):
+        index = soldier["hitbox"][i][0], soldier["hitbox"][i][1]
+        if game_field.game_field[index[0]][index[1]] == consts.FLAG_IMG:
+            return True
+
+    return False
+

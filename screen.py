@@ -3,104 +3,101 @@ import pygame
 import random as rnd
 import time
 
-soldier_image = ""
-soldier = pygame.display.set_mode(
-        (consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH))
+import game_field
+import soldier
+
 screen = pygame.display.set_mode(
-        (consts.WINDOW_WIDTH, consts.WINDOW_HEIGHT))
+       (consts.WINDOW_WIDTH, consts.WINDOW_HEIGHT))
+grass_coordinates = []
 
 # Function that creates global screen with green background
 def init_screen():
-    #pygame.init()
-    global screen # initiate screen as global
-    screen.fill(consts.GREEN)
-    global soldier_image
-    soldier_image = load_image(consts.SOLDIER_REGULAR_IMG, consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
-    pygame.display.flip()
+    global screen
+    global grass_coordinates
 
 # Function that closes the screen
 def close_screen():
     pygame.display.quit()
 
-# Function that draws beginning state field
-# Draws soldier, grass and flag
 def draw_field():
-    # Draw soldier
-    draw_image(consts.SOLDIER_REGULAR_IMG, 0, 0,
-               consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
-
-    # Draw grass
-    grass_coordinates = get_grass_coordinates()
-    for grass_x, grass_y in grass_coordinates:
-        draw_image(consts.GRASS_IMG, grass_x, grass_y)
-
-    # Draw flag
-    flag_x = consts.WINDOW_WIDTH - consts.FLAG_COLS * consts.CELL_SIZE
-    flag_y = consts.WINDOW_HEIGHT - consts.FLAG_ROWS * consts.CELL_SIZE
-    draw_image(consts.FLAG_IMG, flag_x, flag_y,
-               consts.FLAG_WIDTH, consts.FLAG_HEIGHT)
-
+    screen.fill(consts.GREEN)
+    draw_soldier()
+    if grass_coordinates == []:
+        set_grass_coordinates()
+    draw_grass()
+    draw_flag()
     pygame.display.flip()
 
-# Function that loads image to pygame and transform it to given size
-def load_image(image_name, width, height):
+def draw_soldier():
+    soldier_img = load_and_transform_img(soldier.soldier["img"],
+                                         consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
+    x = soldier.get_coordinates()[0] * consts.CELL_SIZE
+    y = soldier.get_coordinates()[1] * consts.CELL_SIZE
+    screen.blit(soldier_img, (x, y))
+
+def load_and_transform_img(image_name, width=consts.IMAGE_LENGTH, height=consts.IMAGE_LENGTH):
     image = pygame.image.load(
-        f"C:/Users/jbt/PycharmProjects/Dual-Project/images/{image_name}")
+            f"C:/Users/jbt/PycharmProjects/Dual-Project/images/{image_name}")
     image_small = pygame.transform.scale(image, (width, height))
     return image_small
 
-# Function that gets image name, position on screen and its size
-# and draws image on the screen
-def draw_image(image_name, pos_x, pos_y, width=consts.IMAGE_LENGTH, height=consts.IMAGE_LENGTH):
-    image = load_image(image_name, width, height)
-    screen.blit(image,(pos_x, pos_y))
+def set_grass_coordinates():
+   count = rnd.randint(15, 30)
+   for i in range(count):
+       curr_x = rnd.randint(0, consts.WINDOW_WIDTH)
+       curr_y = rnd.randint(0, consts.WINDOW_HEIGHT)
+       grass_coordinates.append((curr_x, curr_y))
 
-def draw_soldier(pos_x, pos_y, image=consts.SOLDIER_REGULAR_IMG):
-    soldier.blit(soldier_image, (pos_x, pos_y))
+def draw_grass():
+    grass_img = load_and_transform_img(consts.GRASS_IMG)
+    for grass_x, grass_y in grass_coordinates:
+        screen.blit(grass_img, (grass_x, grass_y))
 
-# Function that draws night mode
-# Draws grid, mines and night mode soldier
-def draw_night_mode(grid):
+def draw_flag():
+    flag_img = load_and_transform_img(consts.FLAG_IMG,
+                                      consts.FLAG_WIDTH, consts.FLAG_HEIGHT)
+    flag_x = consts.WINDOW_WIDTH - consts.FLAG_COLS * consts.CELL_SIZE
+    flag_y = consts.WINDOW_HEIGHT - consts.FLAG_ROWS * consts.CELL_SIZE
+    screen.blit(flag_img, (flag_x, flag_y))
+
+def draw_night_mode():
+    grid = game_field.game_field
+    screen.fill(consts.BLACK)
+    soldier.soldier["img"] = consts.SOLDIER_NIGHT_IMG
     draw_grid()
+    draw_soldier()
+    draw_mines(grid)
+    pygame.display.flip()
 
-    # Draw mines
-    for r in range(consts.BOARD_ROWS):
-        for c in range(consts.BOARD_COLS):
-            if grid[r][c] == consts.MINE_IMG:
-                pos_x = r * consts.CELL_SIZE
-                pos_y = c * consts.CELL_SIZE
-                draw_image(consts.MINE_IMG, pos_x, pos_y)
 
-    # Draw night mode soldier
-    night_soldier = load_image(consts.SOLDIER_NIGHT_IMG,
-                                consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
-    soldier.blit(night_soldier, (pos_x, pos_y))
-
-# Function that draws grid
 def draw_grid():
     for y in range(0, consts.WINDOW_WIDTH, consts.CELL_SIZE):
         for x in range(0, consts.WINDOW_HEIGHT, consts.CELL_SIZE):
-            rect = pygame.Rect(x, y, consts.CELL_SIZE, consts.CELL_SIZE)
-            pygame.draw.rect(screen, consts.BLACK, rect, 1)
+            rect = pygame.Rect(y, x, consts.CELL_SIZE, consts.CELL_SIZE)
+            pygame.draw.rect(screen, consts.GREEN, rect, 1)
 
-# Function that generate grass coordinates using random
-# Returns list of coordinates on the screen
-def get_grass_coordinates():
-    coordinates = []
-    count = rnd.randint(15, 30)
-    for i in range(count):
-        curr_x = rnd.randint(0, consts.WINDOW_WIDTH)
-        curr_y = rnd.randint(0, consts.WINDOW_HEIGHT)
-        coordinates.append((curr_x, curr_y))
-    return coordinates
+def draw_mines(grid):
+    mine_img = load_and_transform_img(consts.MINE_IMG, consts.MINE_WIDTH,
+                                      consts.MINE_HEIGHT)
+    c = 0
+    for r in range(consts.BOARD_ROWS):
+        while c < consts.BOARD_COLS:
+            if grid[r][c] == consts.MINE_IMG:
+                pos_x = c * consts.CELL_SIZE
+                pos_y = r * consts.CELL_SIZE
+                screen.blit(mine_img, (pos_x, pos_y))
+                c += 3
+            c += 1
+        c = 0
 
-# Function that animates mine explosion
-# Draws explosion, teleport and injury soldier
-def draw_mine_explosion(pos_x, pos_y):
-    draw_image(consts.EXPLOSION_IMG, pos_x, pos_y)
+
+def draw_explosion():
+    soldier.soldier["img"] = consts.SOLDIER_INJURED_IMG
+    draw_field()
+    explosion_img = load_and_transform_img(consts.EXPLOSION_IMG)
+    x = soldier.get_coordinates()[0] * consts.CELL_SIZE
+    y = soldier.get_coordinates()[1] * consts.CELL_SIZE
+    screen.blit(explosion_img, (x, y))
     time.sleep(consts.ANIMATION_TIME_EXPLOSION)
-    draw_image(consts.TELEPORT_IMG, pos_x, pos_y)
+    pygame.display.flip()
 
-    # Draw injury soldier
-    injury_soldier = load_image(consts.SOLDIER_INJURED_IMG, consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
-    soldier.blit(injury_soldier, (pos_x, pos_y))
