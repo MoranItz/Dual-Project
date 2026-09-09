@@ -1,10 +1,12 @@
+# Outside source imports
 import pygame
+import time
 
+# Self defined imports
 import screen
 import consts
 import game_field
 import soldier
-import time
 
 
 def main():
@@ -15,6 +17,7 @@ def main():
     soldier.init_soldier()
     game_field.init_game_field()
     screen.init_screen()
+    screen.draw_field()
 
     while not game_over:
         soldier.soldier["img"] = consts.SOLDIER_REGULAR_IMG

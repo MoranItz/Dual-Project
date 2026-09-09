@@ -10,10 +10,12 @@ screen = pygame.display.set_mode(
        (consts.WINDOW_WIDTH, consts.WINDOW_HEIGHT))
 grass_coordinates = []
 
+# Function that creates global screen with green background
 def init_screen():
     global screen
     global grass_coordinates
 
+# Function that closes the screen
 def close_screen():
     pygame.display.quit()
 
