@@ -19,7 +19,6 @@ def init_game_field():
         dfs(grid_copy,0 ,0)
 
 
-
 def generate_random_field():
     field = []
     generate_empty_field(field)
@@ -28,24 +27,25 @@ def generate_random_field():
 
     return field
 
+
 def place_random_mines(field):
     mines_indexes = []
     mines_place = 0
 
     while mines_place <= 20:
         indexs = [random.randint(0, consts.BOARD_ROWS - 1), random.randint(0, consts.BOARD_COLS - 1)]
-
-
         if is_place_ok(field, indexs) and indexs not in mines_indexes:
             for i in range(3):
                 field[indexs[0]][indexs[1]+i] = consts.MINE_IMG
                 mines_indexes.append([indexs[0], indexs[1]+i])
             mines_place += 1
 
+
 def place_flag(field):
     for row in range(consts.BOARD_ROWS -3, consts.BOARD_ROWS):
         for col in range(consts.BOARD_COLS - 4, consts.BOARD_COLS):
             field[row][col] = consts.FLAG_IMG
+
 
 def is_place_ok(field, indexes):
     if indexes[1] > consts.BOARD_COLS - 3:
@@ -67,6 +67,7 @@ def generate_empty_field(field):
         field.append([])
         for col in range(consts.BOARD_COLS):
             field[row].append(consts.EMPTY_CELL)
+
 
 def dfs(grid, x, y):
     if x < 0 or x >= consts.BOARD_ROWS or y < 0 or y >= consts.BOARD_COLS or grid[x][y] == consts.MINE_IMG or grid[x][y] == consts.DFS_SQUARE:

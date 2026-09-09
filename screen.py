@@ -2,15 +2,14 @@ import consts
 import pygame
 import random as rnd
 import time
+
+import game_field
 import soldier
 
 screen = pygame.display.set_mode(
        (consts.WINDOW_WIDTH, consts.WINDOW_HEIGHT))
 grass_coordinates = []
 
-"""
-    Function that initiates global screen and list of grass coordinates
-"""
 def init_screen():
     global screen
     global grass_coordinates
@@ -28,10 +27,11 @@ def draw_field():
     pygame.display.flip()
 
 def draw_soldier():
-    soldier_img = load_and_transform_img(consts.SOLDIER_REGULAR_IMG,
+    soldier_img = load_and_transform_img(soldier.soldier["img"],
                                          consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
-    # TODO: change to soldier's position
-    screen.blit(soldier_img, (0, 0))
+    x = soldier.get_coordinates()[0] * consts.CELL_SIZE
+    y = soldier.get_coordinates()[1] * consts.CELL_SIZE
+    screen.blit(soldier_img, (x, y))
 
 def load_and_transform_img(image_name, width=consts.IMAGE_LENGTH, height=consts.IMAGE_LENGTH):
     image = pygame.image.load(
@@ -58,41 +58,44 @@ def draw_flag():
     flag_y = consts.WINDOW_HEIGHT - consts.FLAG_ROWS * consts.CELL_SIZE
     screen.blit(flag_img, (flag_x, flag_y))
 
-def draw_night_mode(grid):
-    screen.fill(consts.GREEN)
+def draw_night_mode():
+    grid = game_field.game_field
+    screen.fill(consts.BLACK)
+    soldier.soldier["img"] = consts.SOLDIER_NIGHT_IMG
     draw_grid()
+    draw_soldier()
     draw_mines(grid)
-    draw_injury_soldier()
+    pygame.display.flip()
+
 
 def draw_grid():
     for y in range(0, consts.WINDOW_WIDTH, consts.CELL_SIZE):
         for x in range(0, consts.WINDOW_HEIGHT, consts.CELL_SIZE):
-            rect = pygame.Rect(x, y, consts.CELL_SIZE, consts.CELL_SIZE)
-            pygame.draw.rect(screen, consts.BLACK, rect, 1)
+            rect = pygame.Rect(y, x, consts.CELL_SIZE, consts.CELL_SIZE)
+            pygame.draw.rect(screen, consts.GREEN, rect, 1)
 
 def draw_mines(grid):
     mine_img = load_and_transform_img(consts.MINE_IMG, consts.MINE_WIDTH,
                                       consts.MINE_HEIGHT)
+    c = 0
     for r in range(consts.BOARD_ROWS):
-        for c in range(consts.BOARD_COLS):
+        while c < consts.BOARD_COLS:
             if grid[r][c] == consts.MINE_IMG:
-                pos_x = r * consts.CELL_SIZE
-                pos_y = c * consts.CELL_SIZE
+                pos_x = c * consts.CELL_SIZE
+                pos_y = r * consts.CELL_SIZE
                 screen.blit(mine_img, (pos_x, pos_y))
+                c += 3
+            c += 1
+        c = 0
 
-def draw_injury_soldier():
-    injury_soldier_img = load_and_transform_img(consts.SOLDIER_INJURED_IMG,
-                                                consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
-    # TODO: change to soldier's position
-    screen.blit(injury_soldier_img, (0, 0))
 
 def draw_explosion():
+    soldier.soldier["img"] = consts.SOLDIER_INJURED_IMG
+    draw_field()
     explosion_img = load_and_transform_img(consts.EXPLOSION_IMG)
-    # TODO: change to explosion position
-    screen.blit(explosion_img, (0, 0))
+    x = soldier.get_coordinates()[0] * consts.CELL_SIZE
+    y = soldier.get_coordinates()[1] * consts.CELL_SIZE
+    screen.blit(explosion_img, (x, y))
     time.sleep(consts.ANIMATION_TIME_EXPLOSION)
-    injury_soldier = load_and_transform_img(consts.SOLDIER_INJURED_IMG,
-                                consts.SOLDIER_LENGTH, consts.SOLDIER_LENGTH)
-    # TODO: change to soldier's position
-    screen.blit(injury_soldier, (0, 0))
+    pygame.display.flip()
 
