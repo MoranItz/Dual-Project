@@ -41,20 +41,17 @@ def main():
                     if event.key == pygame.K_ESCAPE:
                         return
                     elif event.key == pygame.K_0:
-                        #screen.draw_night_mode()
                         night_mode_stop_watch = time.time()
                     else:
                         soldier.move_player(soldier.get_move_direction(event))
 
             if soldier.player_touch_flag():
                 screen.display_message("Congratulations! :)")
-                print("win")
                 game_over = True
 
             elif soldier.player_touch_mine():
                 screen.draw_explosion()
                 screen.display_message("You lose :(")
-                print("lose")
                 game_over = True
 
 
