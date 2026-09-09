@@ -1,12 +1,13 @@
-import pygame
 import random
-import numpy
-
 import consts
 
 
 game_field = []
 
+"""
+This function creates the game_field for the game and checkes that the field itself
+is winnable using a dfs flood fill algorithm.
+"""
 def init_game_field():
     global  game_field
 
@@ -19,6 +20,11 @@ def init_game_field():
         dfs(grid_copy,0 ,0)
 
 
+"""
+This function returns a 2D array, firstly it creates an 2D array full of empty
+EMPTY_CELL const and then it places the FLAG_IMG const where the flag belongs (bottom right of the map)
+and then it places 20 random mines across the map only in places where legal.
+"""
 def generate_random_field():
     field = []
     generate_empty_field(field)
@@ -27,7 +33,9 @@ def generate_random_field():
 
     return field
 
-
+"""
+This function gets a field and it places 20 random mines across the field in legal spots only
+"""
 def place_random_mines(field):
     mines_indexes = []
     mines_place = 0
@@ -40,13 +48,18 @@ def place_random_mines(field):
                 mines_indexes.append([indexs[0], indexs[1]+i])
             mines_place += 1
 
-
+"""
+This function places the FLAG_IMG const where the flag hitboxes belong (bottom right of the map)
+"""
 def place_flag(field):
     for row in range(consts.BOARD_ROWS -3, consts.BOARD_ROWS):
         for col in range(consts.BOARD_COLS - 4, consts.BOARD_COLS):
             field[row][col] = consts.FLAG_IMG
 
-
+"""
+This function checkes if placing a mine is ok for 3 indexes that are 1 after another.
+if the placement is legal, returns True. Else returns False
+"""
 def is_place_ok(field, indexes):
     if indexes[1] > consts.BOARD_COLS - 3:
         return False
@@ -61,14 +74,19 @@ def is_place_ok(field, indexes):
 
     return True
 
-
+"""
+This function returns an empty initialized 2D array full of constant EMPTY_CELL
+"""
 def generate_empty_field(field):
     for row in range(consts.BOARD_ROWS):
         field.append([])
         for col in range(consts.BOARD_COLS):
             field[row].append(consts.EMPTY_CELL)
 
-
+"""
+This function implements the dfs flood fill algorithm and it changes an Array so its supposudly full of DFS_SQUARE
+if its not (except the mines or until the flag) then the flag is unreachable
+"""
 def dfs(grid, x, y):
     if x < 0 or x >= consts.BOARD_ROWS or y < 0 or y >= consts.BOARD_COLS or grid[x][y] == consts.MINE_IMG or grid[x][y] == consts.DFS_SQUARE:
         return
@@ -80,7 +98,10 @@ def dfs(grid, x, y):
     dfs(grid, x, y + 1)
     dfs(grid, x, y - 1)
 
-
+"""
+This function checkes the flood fill algorithm and the field if the flag
+is reachable, If its reachable returns True. Else returns True
+"""
 def is_field_valid(test_field):
     for row in test_field:
         for col in row:
@@ -88,7 +109,9 @@ def is_field_valid(test_field):
                 return False
     return True
 
-
+"""
+This function returns a copy of a 2D array
+"""
 def copy_grid(grid):
     grid_copy = []
     for row in grid:
